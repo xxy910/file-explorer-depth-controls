@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { ancestorsOf } from "../src/depth.ts";
-import { applyFolds, ExplorerError, folderItems, toolbarHost } from "../src/explorer.ts";
+import { applyFolds, ExplorerError, folderItems, toolbarAnchor } from "../src/explorer.ts";
 
 const getPath = (file: unknown) => typeof file === "string" ? file : undefined;
 const isCurrent = () => true;
@@ -54,7 +54,7 @@ void test("reports missing and incompatible interfaces while permitting an empty
   assert.throws(() => folderItems({ fileItems: { a: { file: "a", collapsed: true } } }, getPath, true),
     hasProblem("unsupported"));
   assert.equal(folderItems({ fileItems: {} }, getPath, false).size, 0);
-  assert.equal(toolbarHost({}), null);
+  assert.equal(toolbarAnchor({}), null);
 });
 
 void test("reports a mismatched native state after applying a fold", async () => {

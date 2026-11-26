@@ -2,18 +2,20 @@ import { Notice, Platform, Plugin, TFolder } from "obsidian";
 import type { Command, View } from "obsidian";
 import { ancestorsOf, LEVELS, limitDepth, stepDepth } from "./depth.ts";
 import type { Depth } from "./depth.ts";
-import { applyFolds, ExplorerError, folderItems, toolbarHost } from "./explorer.ts";
+import { applyFolds, ExplorerError, folderItems, toolbarAnchor } from "./explorer.ts";
 import { getMessages } from "./i18n.ts";
 import { readSettings } from "./settings-data.ts";
 import type { DepthSettings } from "./settings-data.ts";
 import { DepthSettingTab } from "./settings.ts";
 
 const EXPLORER_TYPE = "file-explorer";
-const HOST_CLASS = "file-explorer-depth-controls-host";
+const LAYOUT_CLASS = "file-explorer-depth-controls-layout";
 const RESTORE_DELAYS = [0, 100, 250, 500, 1000];
 
 interface Toolbar {
   element: HTMLElement;
+  parent: HTMLElement;
+  anchor: HTMLElement;
   buttons: Map<Depth, HTMLButtonElement>;
   remove: () => void;
 }
@@ -242,8 +244,8 @@ export default class FileExplorerDepthControls extends Plugin {
     const views = this.app.workspace.getLeavesOfType(EXPLORER_TYPE).filter(leaf => !leaf.isDeferred).map(leaf => leaf.view);
     const hosts = new Map<View, HTMLElement>();
     for (const view of views) {
-      const host = toolbarHost(view);
-      if (host?.isConnected) hosts.set(view, host);
+      const anchor = toolbarAnchor(view);
+      if (anchor?.isConnected && anchor.parentElement) hosts.set(view, anchor);
     }
     let mounted = this.syncExplorerHosts(hosts);
     if (!this.preferences.showToolbar) {
@@ -252,13 +254,16 @@ export default class FileExplorerDepthControls extends Plugin {
       return;
     }
     for (const [view, toolbar] of this.toolbars) {
-      if (toolbar.element.parentElement && toolbar.element.parentElement === hosts.get(view)) continue;
+      const anchor = hosts.get(view);
+      if (anchor && toolbar.anchor === anchor && toolbar.parent === anchor.parentElement
+        && toolbar.element.nextElementSibling === anchor) continue;
       toolbar.remove();
       this.toolbars.delete(view);
     }
-    for (const [view, host] of hosts) {
-      if (this.toolbars.has(view)) continue;
-      this.toolbars.set(view, this.createToolbar(host));
+    for (const [view, anchor] of hosts) {
+      const parent = anchor.parentElement;
+      if (this.toolbars.has(view) || !parent) continue;
+      this.toolbars.set(view, this.createToolbar(parent, anchor));
       mounted = true;
     }
     if (mounted) this.wakeRestore();
@@ -284,11 +289,12 @@ export default class FileExplorerDepthControls extends Plugin {
     return mounted;
   }
 
-  private createToolbar(host: HTMLElement): Toolbar {
-    const element = host.createDiv({
+  private createToolbar(parent: HTMLElement, anchor: HTMLElement): Toolbar {
+    const element = createDiv({
       cls: "file-explorer-depth-controls",
       attr: { role: "group", "aria-label": this.messages.group },
     });
+    anchor.before(element);
     const buttons = new Map<Depth, HTMLButtonElement>();
     const listeners = new AbortController();
     const levels: Depth[] = LEVELS.slice(0, this.preferences.maxDepth);
@@ -303,14 +309,17 @@ export default class FileExplorerDepthControls extends Plugin {
       button.addEventListener("click", () => this.requestDepth(depth), { signal: listeners.signal });
       buttons.set(depth, button);
     }
-    host.classList.add(HOST_CLASS);
+    const hasFileList = anchor.classList.contains("nav-files-container");
+    if (hasFileList) parent.classList.add(LAYOUT_CLASS);
     return {
       element,
+      parent,
+      anchor,
       buttons,
       remove: () => {
         listeners.abort();
         element.remove();
-        host.classList.remove(HOST_CLASS);
+        if (hasFileList) parent.classList.remove(LAYOUT_CLASS);
       },
     };
   }

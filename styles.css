@@ -1,17 +1,27 @@
-.nav-buttons-container.file-explorer-depth-controls-host {
-  flex-wrap: wrap;
-}
-
 .file-explorer-depth-controls {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  flex: 1 0 100%;
+  flex-shrink: 0;
   min-width: 0;
   max-width: 100%;
   gap: var(--size-2-2);
   padding-block: var(--size-2-2);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.is-phone .file-explorer-depth-controls-layout {
+  flex-direction: column;
+}
+
+.is-phone .file-explorer-depth-controls-layout > .file-explorer-depth-controls,
+.is-phone .file-explorer-depth-controls-layout > .file-explorer-depth-controls + .nav-files-container {
+  order: 0;
+}
+
+.is-phone .file-explorer-depth-controls-layout > .nav-header {
+  order: 1;
 }
 
 .file-explorer-depth-controls button.file-explorer-depth-controls-button {

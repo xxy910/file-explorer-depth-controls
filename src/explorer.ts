@@ -3,7 +3,6 @@ import type { Depth } from "./depth.ts";
 
 interface FileExplorerView {
   containerEl?: HTMLElement;
-  headerDom?: { navButtonsEl?: HTMLElement };
   fileItems?: unknown;
   tree?: { infinityScroll?: { compute?: () => void }; requestSaveFolds?: () => void };
 }
@@ -31,8 +30,11 @@ export class ExplorerError extends Error {
   }
 }
 
-export function toolbarHost(view: FileExplorerView): HTMLElement | null {
-  return view.headerDom?.navButtonsEl ?? view.containerEl?.querySelector<HTMLElement>(".nav-buttons-container") ?? null;
+export function toolbarAnchor(view: FileExplorerView): HTMLElement | null {
+  const container = view.containerEl;
+  return container?.querySelector<HTMLElement>(".nav-files-container")
+    ?? container?.querySelector<HTMLElement>(".nav-header")
+    ?? null;
 }
 
 export function folderItems(view: FileExplorerView, folderPath: FolderPath, hasFolders: boolean) {

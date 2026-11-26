@@ -1,6 +1,26 @@
 # File Explorer Depth Controls
 
-Show folders up to a selected depth or expand all folders in the native file explorer. Supports Obsidian 1.8.7 or later on desktop, iOS, and Android. The controls follow the app language by default, with a setting to use English or Simplified Chinese.
+## 简体中文
+
+File Explorer Depth Controls 在 Obsidian 文件列表上方提供层级控制栏，用于统一调整文件夹树的展开深度。
+
+- **按层级展开** · 选择 `L1`、`L2` 等层级，展开到指定深度并折叠更深的文件夹。
+- **展开全部** · 选择「全部」，展开文件列表中的所有文件夹。
+- **保留当前笔记路径** · 启用后，切换层级时保持当前笔记的上级文件夹展开，便于在文件列表中定位该笔记。
+
+支持桌面端和移动端，界面提供简体中文和英文。
+
+## English
+
+File Explorer Depth Controls adds a toolbar above Obsidian’s file list to control how deeply the folder tree is expanded.
+
+- **Expand to a selected depth** · Select a level such as `L1` or `L2` to expand the folder tree to that depth and collapse deeper folders.
+- **Expand all** · Select **All** to expand every folder in the file explorer.
+- **Keep the active note’s folder path expanded** · When enabled, the folders containing the active note stay expanded as you switch levels, so you can locate the note in the file list.
+
+Available on desktop and mobile, with Simplified Chinese and English interfaces.
+
+Requires Obsidian 1.8.7 or later on desktop, iOS, and Android. The controls follow the app language by default.
 
 ## Use the controls
 
