@@ -1,4 +1,4 @@
-import { PluginSettingTab, Setting } from "obsidian";
+import { PluginSettingTab, requireApiVersion, Setting } from "obsidian";
 import type { App, DropdownComponent, Plugin, SettingDefinitionRender } from "obsidian";
 import { isNumericDepth, LEVELS } from "./depth.ts";
 import type { Depth } from "./depth.ts";
@@ -68,7 +68,7 @@ export class DepthSettingTab extends PluginSettingTab {
   refreshLanguage(): void {
     const isDisplayed = this.depthDropdown?.selectEl.isConnected ?? false;
     this.clearDropdowns();
-    if (typeof this.update === "function") this.update();
+    if (requireApiVersion("1.13.0")) this.update();
     else if (isDisplayed) this.display();
   }
 

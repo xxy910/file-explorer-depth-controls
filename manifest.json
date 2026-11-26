@@ -1,7 +1,7 @@
 {
   "id": "file-explorer-depth-controls",
   "name": "File Explorer Depth Controls",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "minAppVersion": "1.8.7",
   "description": "控制文件列表中的文件夹展开深度，支持按层级展开、展开全部，以及保留当前笔记所在的文件夹路径。 Control folder expansion depth in the file explorer. Expand to a selected level or expand all folders, with an option to keep the active note’s folder path expanded.",
   "author": "xxy910",
