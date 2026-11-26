@@ -1,53 +1,91 @@
+**English** | [简体中文](README.zh-CN.md)
+
 # File Explorer Depth Controls
 
-## 简体中文
+An Obsidian plugin that adds a row of depth buttons above the file explorer, so one click collapses the folder tree to a chosen number of levels. Built for vaults where folders nest five levels deep and you only want to see the top two.
 
-File Explorer Depth Controls 在 Obsidian 文件列表上方提供层级控制栏，用于统一调整文件夹树的展开深度。
+## The problem you know too well
 
-- **按层级展开** · 选择 `L1`、`L2` 等层级，展开到指定深度并折叠更深的文件夹。
-- **展开全部** · 选择「全部」，展开文件列表中的所有文件夹。
-- **保留当前笔记路径** · 启用后，切换层级时保持当前笔记的上级文件夹展开，便于在文件列表中定位该笔记。
+Your folders go four or five levels deep. You want a temporary view of just two levels, so you start clicking fold arrows one by one. Ten clicks later the tree is clean — but next time you need something deep, you expand it all back by hand.
 
-支持桌面端和移动端，界面提供简体中文和英文。
+I built this plugin because I hit that loop every day. Collapsing should not be manual labor.
 
-## English
+## How it solves it
 
-File Explorer Depth Controls adds a toolbar above Obsidian’s file list to control how deeply the folder tree is expanded.
+It adds a row of buttons above the file explorer: L1 through L6, plus "All". Click L2 and the whole tree shows two levels. Click L3 to go deeper, or "All" to expand everything.
 
-- **Expand to a selected depth** · Select a level such as `L1` or `L2` to expand the folder tree to that depth and collapse deeper folders.
-- **Expand all** · Select **All** to expand every folder in the file explorer.
-- **Keep the active note’s folder path expanded** · When enabled, the folders containing the active note stay expanded as you switch levels, so you can locate the note in the file list.
+I did not rebuild the file tree or touch sorting. Obsidian's native explorer is already good — what it lacks is a "collapse by level" action, so the plugin adds exactly that one action. Every fold is a native fold state, identical to folding by hand.
 
-Available on desktop and mobile, with Simplified Chinese and English interfaces.
+## Features
 
-Requires Obsidian 1.8.7 or later on desktop, iOS, and Android. The controls follow the app language by default.
+- **Depth button group** — L1–L6 plus "All" buttons above the file explorer; one click folds the whole tree to that level. When to use: folders nest deep and you want to see only the top levels.
+- **Step commands** — "Deeper" and "Shallower" commands; going past the deepest level lands on "All", collapsing from "All" returns to the deepest numbered level. When to use: keyboard-first workflow, no mouse needed.
+- **Direct depth commands** — jump straight to any level or "All" from the command palette. When to use: bind a hotkey to the level you use most.
+- **Restore on startup** — reapplies your last depth after reopening Obsidian; on desktop it retries a few times until the tree is ready, on mobile it waits for the explorer to render. When to use: you don't want to re-click after every launch.
+- **Keep active file visible** — auto-expands the ancestors of the currently open note after collapsing, so it never gets hidden. When to use: you're editing a deep note and don't want it buried.
+- **Interface language** — follows Obsidian's language for Chinese or English, or set it manually. When to use: Obsidian's UI language differs from the language you want.
 
-## Use the controls
+## What it does not do
 
-- Select **L1** to collapse all top-level folders to the vault root. Select a deeper level to show more of the folder tree. Select **All** to expand every folder.
-- When **Keep the active file visible** is on, the current file’s parent folders stay expanded when you apply a depth.
-- Use the command palette or assign hotkeys. Direct commands cover L1–L6. A command above the configured maximum also raises the toolbar limit. At the deepest configured level, stepping deeper selects **All**. Stepping shallower from **All** returns to the maximum numbered level. Stepping past **L1** or deeper than **All** keeps the current selection.
-- The settings tab lets you choose the current depth, set the toolbar limit between L2 and L6, restore your last depth at startup, hide the toolbar or **All** button, and enable success notices. Commands work even when the toolbar is hidden.
-- On mobile, open the left sidebar and select **Files**. The toolbar wraps on narrow screens and uses larger tap targets. If startup restore is still pending when the file explorer appears, the plugin attempts to apply your saved depth then. A manual depth command or a settings change cancels pending startup restore.
+- Does not take over the file explorer: sorting, search, and file creation stay native.
+- Does not modify any note: it only changes folder fold states.
+- No tags, colors, or custom filters.
+- No network access.
 
-The plugin uses internal file explorer interfaces to change and save native folder folds, and stores its own preferences through the plugin settings API. It makes no network requests and does not edit vault notes.
+## Installation
 
-## Install manually
+**Community plugins**: in Obsidian, go to Settings → Community plugins → Browse, search for `File Explorer Depth Controls`, install and enable.
 
-Download `main.js`, `manifest.json`, and `styles.css` from the same release. Place them in `.obsidian/plugins/file-explorer-depth-controls` in your vault, then enable **File Explorer Depth Controls** under **Community plugins**.
+**Manual install**:
+1. Download `main.js`, `manifest.json`, and `styles.css` from [Releases](https://github.com/xxy910/file-explorer-depth-controls/releases).
+2. Put them into `.obsidian/plugins/file-explorer-depth-controls/` in your vault.
+3. Restart Obsidian and enable the plugin under Community plugins.
 
-## Develop
+## First three steps
 
-Use Node.js 22.13 or later. Run `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build`. Use `npm.cmd` on Windows if PowerShell blocks `npm.ps1`. The production bundle is `main.js` at the repository root.
+1. After enabling, a row of depth buttons appears above the file explorer.
+2. Click L2 and watch the tree collapse to two levels.
+3. Click "All" to restore the full tree.
 
-## 简体中文说明
+## Settings
 
-在桌面端、iOS 和 Android 的原生文件目录顶部添加层级按钮，适用于 Obsidian 1.8.7 或更高版本。**L1** 折叠顶层文件夹，只显示库根目录的内容。更深的层级会展开更多文件夹。**全部** 展开所有文件夹。默认保留当前文件的各级父文件夹，方便在收展后继续定位当前文件。
+- **Language** — default `auto`, follows Obsidian. Change to 中文 or English if the interface language is wrong.
+- **Restore on startup** — default on. Turn off to start from the default depth every launch.
+- **Current depth** — default L3. This is the current state; changing it here works like clicking a button.
+- **Max depth** — default L4, options L2–L6. Controls how many buttons you get: at 4, you see L1–L4 plus "All".
+- **Show "All" button** — default on. Turn off to keep only numbered levels.
+- **Keep active file visible** — default on. Don't turn it off if you often edit deep notes.
+- **Show toolbar** — default on. Turn it off if you only use commands.
+- **Show notices** — default off. When on, switching levels pops a notice.
 
-可通过命令面板直达 **L1–L6**、展开全部或逐层收展，也可以为这些命令绑定快捷键。直达高于工具栏上限的层级时，上限会随之提高。从最大数字层级继续加深会进入 **全部**，从 **全部** 浅收会回到最大数字层级。
+## FAQ
 
-设置页可调整语言、当前层级、工具栏上限、启动恢复、按钮显示、当前文件路径保留和成功提示。关闭工具栏后，命令和快捷键仍可用。插件不发送网络请求，也不修改笔记内容。
+- **Does it touch my notes or files?** No. It only changes folder fold states; note content is never modified.
+- **Does it use the network?** Never. There are no network requests at all.
+- **What happens on a new device?** The depth state lives in each device's vault config and doesn't sync. Click once on the new device, or rely on the startup default.
+- **Why only up to L6?** Obsidian stores fold states per level, and 6 covers most vaults. For deeper cases use "All".
+- **Does it work on mobile?** Yes. Mobile renders the explorer at a different time, and the plugin handles that explicitly.
 
-移动端从左侧抽屉打开文件目录。按钮的触控区域更大，窄屏下会折行。如果启动时文件抽屉尚未就绪，待目录挂载或进入可见区域后会继续尝试恢复。手动切换层级或修改设置会取消待执行的启动恢复。
+## Compatibility & privacy
 
-手动安装时，把同一版本的 `main.js`、`manifest.json` 和 `styles.css` 放在库内的 `.obsidian/plugins/file-explorer-depth-controls` 文件夹，再在第三方插件设置中启用。
+- Requires Obsidian 1.8.7 or later.
+- Works on desktop and mobile.
+- No network requests, no data collection.
+
+## Development
+
+Requires Node.js 22.13+.
+
+```bash
+npm ci
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
+
+Tests run on Node's built-in test runner against `tests/`. After touching explorer logic, click through every depth button in a real Obsidian vault as visual acceptance.
+
+## License
+
+[MIT](LICENSE)
